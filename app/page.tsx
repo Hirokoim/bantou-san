@@ -1,65 +1,98 @@
-import Image from "next/image";
+'use client'
+
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import type { User } from '@supabase/supabase-js'
 
 export default function Home() {
+  const supabase = createClient()
+  const [user, setUser] = useState<User | null>(null)
+  const [orgId, setOrgId] = useState<string | null>(null)
+  const [memo, setMemo] = useState('')
+  const [notices, setNotices] = useState<{ id: string; title: string; source_memo: string }[]>([])
+
+  // 起動時：ログイン状態と所属組合・お知らせ一覧を読み込む
+  useEffect(() => {
+    const load = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      if (!user) return
+      const { data: m } = await supabase.from('memberships').select('organization_id').limit(1)
+      if (m && m.length > 0) {
+        setOrgId(m[0].organization_id)
+        const { data: n } = await supabase.from('notices')
+          .select('id, title, source_memo').order('created_at', { ascending: false })
+        setNotices(n ?? [])
+      }
+    }
+    load()
+  }, [])
+
+  // Googleでログイン
+  const login = () => supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: `${location.origin}/auth/callback` },
+  })
+
+  const logout = async () => { await supabase.auth.signOut(); location.reload() }
+
+  // 組合を作成し、自分を理事長として登録する（初回のみ）
+  const createOrg = async () => {
+    const { data: org, error } = await supabase.from('organizations')
+      .insert({ name: 'テスト管理組合' }).select().single()
+    if (error || !org) { alert('組合の作成に失敗: ' + error?.message); return }
+    await supabase.from('memberships')
+      .insert({ user_id: user!.id, organization_id: org.id, role: 'chair' })
+    setOrgId(org.id)
+  }
+
+  // お知らせを1件保存する（動作確認用。生成機能は次のステップで実装）
+  const saveNotice = async () => {
+    const { error } = await supabase.from('notices').insert({
+      organization_id: orgId,
+      created_by: user!.id,
+      title: memo.slice(0, 20),
+      source_memo: memo,
+    })
+    if (error) { alert('保存に失敗: ' + error.message); return }
+    setMemo('')
+    location.reload()
+  }
+
+  if (!user) return (
+    <main className="p-8">
+      <button onClick={login} className="rounded bg-blue-600 px-6 py-3 text-lg text-white">
+        Googleでログイン
+      </button>
+    </main>
+  )
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    <main className="p-8 space-y-4">
+      <div className="flex gap-4 items-center">
+        <p>{user.email} でログイン中</p>
+        <button onClick={logout} className="underline">ログアウト</button>
+      </div>
+      {!orgId ? (
+        <button onClick={createOrg} className="rounded bg-green-600 px-6 py-3 text-lg text-white">
+          テスト組合を作成
+        </button>
+      ) : (
+        <>
+          <textarea value={memo} onChange={(e) => setMemo(e.target.value)}
+            className="w-full max-w-lg border p-3 text-lg" rows={3}
+            placeholder="お知らせのメモを入力（動作確認用）" />
+          <button onClick={saveNotice} disabled={!memo}
+            className="block rounded bg-blue-600 px-6 py-3 text-lg text-white disabled:opacity-40">
+            保存
+          </button>
+          <ul className="max-w-lg space-y-2">
+            {notices.map((n) => (
+              <li key={n.id} className="border p-3">{n.source_memo}</li>
+            ))}
+          </ul>
+        </>
+      )}
+    </main>
+  )
 }

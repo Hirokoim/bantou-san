@@ -7,6 +7,7 @@ export type Bantou = {
   fullName: string
   sashColor: string
   emoji: string
+  image?: string
   role: string
   selectLine: string
   doneLine: string
@@ -33,6 +34,7 @@ export const BANTOU_LIST: Bantou[] = [
     fullName: 'はり出し番頭さん',
     sashColor: 'hari',
     emoji: '📜',
+    image: '/images/bantou-hari.png',
     role: 'お知らせ作成',
     selectLine: 'はり出し番頭、参りました。お知らせのことなら、お任せください',
     doneLine: 'できましたよ。ご覧くださいな',
@@ -44,6 +46,7 @@ export const BANTOU_LIST: Bantou[] = [
     fullName: '筆どめ番頭さん',
     sashColor: 'fude',
     emoji: '🖋️',
+    image: '/images/bantou-fude.png',
     role: '議事録',
     selectLine: '筆どめ番頭でございます。議事録、承ります',
     doneLine: '書き上がりました。お確かめください',
@@ -56,6 +59,7 @@ export const BANTOU_LIST: Bantou[] = [
     fullName: '触れ回り番頭さん',
     sashColor: 'fure',
     emoji: '📣',
+    image: '/images/bantou-fure.png',
     role: '配信',
     selectLine: '触れ回り番頭です。みなさんへのお届け、お任せを',
     doneLine: '触れて回りました。行き届いておりますよ',
@@ -68,6 +72,7 @@ export const BANTOU_LIST: Bantou[] = [
     fullName: '暦番頭さん',
     sashColor: 'koyo',
     emoji: '📅',
+    image: '/images/bantou-koyo.png',
     role: '時期・鮮度アラート',
     selectLine: '暦番頭です。時期のことは、わたくしが見ております',
     doneLine: '暦に記しました。時期が来たらお知らせします',
@@ -81,6 +86,7 @@ export const BANTOU_LIST: Bantou[] = [
     fullName: '火消し番頭さん',
     sashColor: 'hike',
     emoji: '🔔',
+    image: '/images/bantou-hike.png',
     role: '緊急',
     selectLine: '火消し番頭、参上。緊急のご用、承ります',
     doneLine: '手配、完了しました。ご安心ください',
@@ -93,6 +99,7 @@ export const BANTOU_LIST: Bantou[] = [
     fullName: '蔵番頭さん',
     sashColor: 'kura',
     emoji: '🗄️',
+    image: '/images/bantou-kura.png',
     role: '過去のお知らせ一覧表示',
     selectLine: '蔵番頭です。これまでの記録は、すべて蔵にございます',
     doneLine: '蔵に納めました。いつでもお出しできます',

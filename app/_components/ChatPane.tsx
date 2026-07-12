@@ -3,16 +3,7 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { getBantou } from '@/lib/bantou'
 import type { ChatMessage } from '@/lib/chat'
-
-const SASH_BG: Record<string, string> = {
-  ai: 'bg-ai',
-  hari: 'bg-hari',
-  fude: 'bg-fude',
-  fure: 'bg-fure',
-  koyo: 'bg-koyo',
-  hike: 'bg-hike',
-  kura: 'bg-kura',
-}
+import BantouFace from './BantouFace'
 
 type Props = {
   messages: ChatMessage[]
@@ -57,9 +48,11 @@ export default function ChatPane({
             const b = getBantou(msg.bantouId)
             return (
               <div key={msg.id} className="flex max-w-[92%] items-end gap-2.5">
-                <div className={`flex h-10 w-10 flex-none items-center justify-center rounded-full text-lg text-white ${SASH_BG[b.sashColor]}`}>
-                  {b.emoji}
-                </div>
+                <BantouFace
+                  bantou={b}
+                  className="h-10 w-10 flex-none rounded-full"
+                  emojiClassName="text-lg"
+                />
                 <div>
                   <p className="mb-0.5 text-[11.5px] font-bold text-[#5C544A]">{b.fullName}</p>
                   <div className="rounded-[4px_12px_12px_12px] border border-line bg-card px-[13px] py-2.5 text-lg">

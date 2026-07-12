@@ -1,4 +1,5 @@
 import type { Bantou } from '@/lib/bantou'
+import BantouFace from './BantouFace'
 
 type Props = {
   bantou: Bantou
@@ -6,15 +7,6 @@ type Props = {
   popping: boolean
   onSelect: (id: Bantou['id']) => void
   cardRef?: (el: HTMLButtonElement | null) => void
-}
-
-const SASH_BG: Record<string, string> = {
-  hari: 'bg-hari',
-  fude: 'bg-fude',
-  fure: 'bg-fure',
-  koyo: 'bg-koyo',
-  hike: 'bg-hike',
-  kura: 'bg-kura',
 }
 
 export default function BantouCard({ bantou, active, popping, onSelect, cardRef }: Props) {
@@ -27,9 +19,11 @@ export default function BantouCard({ bantou, active, popping, onSelect, cardRef 
       } ${popping ? 'bantou-pop' : ''}`}
     >
       <span className="kasumi-burst" />
-      <div className={`${SASH_BG[bantou.sashColor]} py-4 text-[30px] text-white`}>
-        {bantou.emoji}
-      </div>
+      <BantouFace
+        bantou={bantou}
+        className="h-24 w-full"
+        emojiClassName="text-[30px]"
+      />
       <div className="px-1 py-2.5 text-[14.5px] font-extrabold">{bantou.name}</div>
     </button>
   )

@@ -28,7 +28,7 @@ export default function BantouGrid({ selected, poppingId, onSelect, cardRef }: P
 
       {!collapsed && (
         <div className="min-h-0 flex-1 overflow-x-auto overflow-y-hidden px-3 pb-3 [scroll-snap-type:x_mandatory] md:overflow-y-auto md:overflow-x-hidden md:px-3.5 md:pb-3.5">
-          <div className="flex w-max gap-2.5 md:grid md:w-auto md:grid-cols-2 md:content-start md:gap-3">
+          <div className="flex w-max gap-2.5 md:grid md:w-auto md:grid-cols-3 md:content-start md:gap-2.5">
             {BANTOU_LIST.map((b) => (
               <div key={b.id} className="w-[108px] flex-none [scroll-snap-align:start] md:w-auto">
                 <BantouCard

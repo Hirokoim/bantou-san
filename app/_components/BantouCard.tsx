@@ -21,7 +21,7 @@ export default function BantouCard({ bantou, active, popping, onSelect, cardRef 
       <span className="kasumi-burst" />
       <BantouFace
         bantou={bantou}
-        className="aspect-[3/4] w-full md:aspect-auto md:h-[18vh]"
+        className="aspect-[3/4] w-full md:aspect-auto md:h-[24vh]"
         emojiClassName="text-[30px] md:text-2xl"
       />
       <div className="px-1 py-2.5 text-[14.5px] font-extrabold">{bantou.name}</div>

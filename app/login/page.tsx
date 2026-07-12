@@ -32,10 +32,44 @@ function LoginPanel({ onLogin }: { onLogin: () => void }) {
   )
 }
 
+function HeroWithOverlay({
+  src, onLogin, panelMarginBottom, panelMaxWidth,
+}: {
+  src: string
+  onLogin: () => void
+  panelMarginBottom: string
+  panelMaxWidth: string
+}) {
+  const [imgFailed, setImgFailed] = useState(false)
+
+  return (
+    <div className="relative flex min-h-screen items-end justify-center bg-washi">
+      {!imgFailed ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt=""
+          onError={() => setImgFailed(true)}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-ink text-4xl font-display font-extrabold text-ink">
+            番
+          </div>
+        </div>
+      )}
+      <div
+        className={`relative flex w-full flex-col items-center gap-3 rounded-2xl bg-washi/95 px-8 py-8 text-center shadow-lg ${panelMarginBottom} ${panelMaxWidth}`}
+      >
+        <LoginPanel onLogin={onLogin} />
+      </div>
+    </div>
+  )
+}
+
 export default function LoginPage() {
   const supabase = createClient()
-  const [mobileImgFailed, setMobileImgFailed] = useState(false)
-  const [desktopImgFailed, setDesktopImgFailed] = useState(false)
 
   const login = () => supabase.auth.signInWithOAuth({
     provider: 'google',
@@ -44,48 +78,21 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen">
-      {/* スマホ幅：縦長画像を上2/3、下1/3は帯にテキストとボタン */}
-      <div className="flex min-h-screen flex-col md:hidden">
-        <div className="flex-[2] bg-washi flex items-center justify-center">
-          {!mobileImgFailed ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src="/images/login-hero.png"
-              alt=""
-              onError={() => setMobileImgFailed(true)}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-ink text-4xl font-display font-extrabold text-ink">
-              番
-            </div>
-          )}
-        </div>
-        <div className="flex-1 bg-washi flex flex-col items-center justify-center gap-3 px-6 py-8 text-center">
-          <LoginPanel onLogin={login} />
-        </div>
+      <div className="md:hidden">
+        <HeroWithOverlay
+          src="/images/login-hero.png"
+          onLogin={login}
+          panelMarginBottom="mb-[14%]"
+          panelMaxWidth="max-w-sm mx-6"
+        />
       </div>
-
-      {/* PC・タブレット幅：横長画像を全面表示し、下寄りにパネルを重ねる */}
-      <div className="relative hidden min-h-screen items-end justify-center bg-washi md:flex">
-        {!desktopImgFailed ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src="/images/login-hero-desktop.png"
-            alt=""
-            onError={() => setDesktopImgFailed(true)}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex h-32 w-32 items-center justify-center rounded-full border-4 border-ink text-6xl font-display font-extrabold text-ink">
-              番
-            </div>
-          </div>
-        )}
-        <div className="relative mb-[6%] flex w-full max-w-md flex-col items-center gap-3 rounded-2xl bg-washi/95 px-8 py-8 text-center shadow-lg">
-          <LoginPanel onLogin={login} />
-        </div>
+      <div className="hidden md:block">
+        <HeroWithOverlay
+          src="/images/login-hero-desktop.png"
+          onLogin={login}
+          panelMarginBottom="mb-[6%]"
+          panelMaxWidth="max-w-md"
+        />
       </div>
     </main>
   )

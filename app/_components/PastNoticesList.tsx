@@ -24,7 +24,7 @@ export default function PastNoticesList({ orgId }: { orgId: string }) {
 
   if (notices.length === 0) {
     return (
-      <div className="max-w-[92%] rounded-xl border border-line bg-card p-4 text-base">
+      <div className="max-w-[92%] rounded-xl border border-line bg-card p-4 text-lg">
         まだお知らせがありません。
       </div>
     )
@@ -34,8 +34,8 @@ export default function PastNoticesList({ orgId }: { orgId: string }) {
     <ul className="max-w-[92%] space-y-2 rounded-xl border border-line bg-card p-4">
       {notices.map((n) => (
         <li key={n.id} className="flex items-baseline justify-between gap-3 border-b border-line pb-2 last:border-0 last:pb-0">
-          <span className="text-base">{n.title}</span>
-          <span className="flex-none text-sm text-[#5C544A]">
+          <span className="text-lg">{n.title}</span>
+          <span className="flex-none text-base text-[#5C544A]">
             {new Date(n.created_at).toLocaleDateString('ja-JP')}
           </span>
         </li>

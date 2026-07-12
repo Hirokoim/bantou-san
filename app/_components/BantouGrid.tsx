@@ -17,10 +17,10 @@ export default function BantouGrid({ selected, poppingId, onSelect, cardRef }: P
   return (
     <aside className="flex min-h-0 flex-col bg-[#EFE8D6] md:basis-[43%] md:border-l md:border-line">
       <div className="flex flex-none items-center justify-between px-4 py-2 text-left md:block md:px-4 md:py-2.5 md:text-center">
-        <p className="text-sm font-bold md:text-[16.5px]">番頭さんを選ぶ</p>
+        <p className="text-base font-bold md:text-xl">番頭さんを選ぶ</p>
         <button
           onClick={() => setCollapsed((c) => !c)}
-          className="min-h-[34px] text-[13px] text-ai underline md:hidden"
+          className="min-h-[44px] text-base text-ai underline md:hidden"
         >
           {collapsed ? '開く' : 'たたむ'}
         </button>

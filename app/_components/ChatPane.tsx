@@ -30,7 +30,7 @@ export default function ChatPane({
         {messages.map((msg) => {
           if (msg.kind === 'system') {
             return (
-              <div key={msg.id} className="self-center text-center text-[13px] text-[#8a8072]">
+              <div key={msg.id} className="self-center text-center text-sm text-[#8a8072]">
                 {msg.text}
               </div>
             )
@@ -38,7 +38,7 @@ export default function ChatPane({
           if (msg.kind === 'user') {
             return (
               <div key={msg.id} className="max-w-[92%] self-end">
-                <div className="rounded-[12px_4px_12px_12px] border border-[#B9CCE0] bg-[#DDE7F2] px-[13px] py-2.5 text-lg">
+                <div className="rounded-[12px_4px_12px_12px] border border-[#B9CCE0] bg-[#DDE7F2] px-4 py-3 text-xl">
                   {msg.text}
                 </div>
               </div>
@@ -50,17 +50,17 @@ export default function ChatPane({
               <div key={msg.id} className="flex max-w-[92%] items-end gap-2.5">
                 <BantouFace
                   bantou={b}
-                  className="h-10 w-10 flex-none rounded-full"
-                  emojiClassName="text-lg"
+                  className="h-12 w-12 flex-none rounded-full"
+                  emojiClassName="text-xl"
                 />
                 <div>
-                  <p className="mb-0.5 text-[11.5px] font-bold text-[#5C544A]">{b.fullName}</p>
-                  <div className="rounded-[4px_12px_12px_12px] border border-line bg-card px-[13px] py-2.5 text-lg">
+                  <p className="mb-0.5 text-base font-bold text-[#5C544A]">{b.fullName}</p>
+                  <div className="rounded-[4px_12px_12px_12px] border border-line bg-card px-4 py-3 text-xl">
                     {msg.kind === 'typing' ? (
-                      <span className="inline-flex gap-1.5 py-1">
-                        <span className="h-[7px] w-[7px] animate-pulse rounded-full bg-[#9AA9BC]" />
-                        <span className="h-[7px] w-[7px] animate-pulse rounded-full bg-[#9AA9BC] [animation-delay:0.2s]" />
-                        <span className="h-[7px] w-[7px] animate-pulse rounded-full bg-[#9AA9BC] [animation-delay:0.4s]" />
+                      <span className="inline-flex gap-2 py-1.5">
+                        <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#9AA9BC]" />
+                        <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#9AA9BC] [animation-delay:0.2s]" />
+                        <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#9AA9BC] [animation-delay:0.4s]" />
                       </span>
                     ) : (
                       msg.text
@@ -83,13 +83,13 @@ export default function ChatPane({
           disabled={!inputEnabled}
           placeholder={placeholder}
           aria-label="番頭さんへの伝言"
-          className="min-h-[46px] flex-1 rounded-full border-2 border-line bg-card px-4 text-lg focus:outline focus:outline-[3px] focus:outline-[#7FA3CC] disabled:opacity-60"
+          className="min-h-[56px] flex-1 rounded-full border-2 border-line bg-card px-5 text-xl focus:outline focus:outline-[3px] focus:outline-[#7FA3CC] disabled:opacity-60"
         />
         <button
           onClick={onSend}
           disabled={!inputEnabled}
           aria-label="送る"
-          className="h-[46px] w-[46px] flex-none rounded-full bg-ai text-lg text-white disabled:opacity-40"
+          className="h-[56px] w-[56px] flex-none rounded-full bg-ai text-xl text-white disabled:opacity-40"
         >
           ➤
         </button>

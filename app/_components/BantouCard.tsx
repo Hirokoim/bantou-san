@@ -21,10 +21,10 @@ export default function BantouCard({ bantou, active, popping, onSelect, cardRef 
       <span className="kasumi-burst" />
       <BantouFace
         bantou={bantou}
-        className="aspect-[3/4] w-full md:aspect-auto md:h-[24vh]"
-        emojiClassName="text-[30px] md:text-2xl"
+        className="aspect-[3/4] w-full md:aspect-auto md:h-[32vh]"
+        emojiClassName="text-[30px] md:text-3xl"
       />
-      <div className="px-1 py-2.5 text-[14.5px] font-extrabold">{bantou.name}</div>
+      <div className="px-1 py-2.5 text-lg font-extrabold">{bantou.name}</div>
     </button>
   )
 }

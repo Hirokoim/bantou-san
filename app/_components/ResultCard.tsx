@@ -45,14 +45,14 @@ export default function ResultCard({ noticeId, onRetry }: Props) {
 
   return (
     <div className="max-w-[92%] rounded-xl border border-line bg-card p-4">
-      <h3 className="mb-2 font-display text-lg font-bold text-ai-deep">{notice.title}</h3>
+      <h3 className="mb-2 font-display text-xl font-bold text-ai-deep">{notice.title}</h3>
 
-      <div className="mb-2 flex flex-wrap gap-1.5">
+      <div className="mb-2 flex flex-wrap gap-2">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`min-h-[36px] rounded-full px-3 py-1 text-sm font-bold ${
+            className={`min-h-[44px] rounded-full px-4 py-2 text-base font-bold ${
               tab === t.id ? 'bg-ai text-white' : 'bg-washi text-ink'
             }`}
           >
@@ -61,23 +61,23 @@ export default function ResultCard({ noticeId, onRetry }: Props) {
         ))}
       </div>
 
-      <div className="mb-3 whitespace-pre-wrap rounded-lg bg-washi p-3 text-base leading-relaxed">
+      <div className="mb-3 whitespace-pre-wrap rounded-lg bg-washi p-4 text-lg leading-relaxed">
         {body || 'まだ生成されていません。'}
       </div>
 
       {confirmed ? (
-        <p className="text-sm text-matsu">承知しました。</p>
+        <p className="text-base text-matsu">承知しました。</p>
       ) : (
         <div className="flex gap-2">
           <button
             onClick={() => setConfirmed(true)}
-            className="min-h-[44px] flex-1 rounded-lg bg-ai px-3 text-base font-bold text-white"
+            className="min-h-[52px] flex-1 rounded-lg bg-ai px-3 text-lg font-bold text-white"
           >
             これで貼り出す
           </button>
           <button
             onClick={onRetry}
-            className="min-h-[44px] flex-1 rounded-lg border-2 border-line px-3 text-base font-bold text-ink"
+            className="min-h-[52px] flex-1 rounded-lg border-2 border-line px-3 text-lg font-bold text-ink"
           >
             直してもらう
           </button>

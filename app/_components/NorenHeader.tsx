@@ -2,9 +2,10 @@ type Props = {
   orgName: string
   muted: boolean
   onToggleMute: () => void
+  onLogout: () => void
 }
 
-export default function NorenHeader({ orgName, muted, onToggleMute }: Props) {
+export default function NorenHeader({ orgName, muted, onToggleMute, onLogout }: Props) {
   return (
     <header className="noren-pleat flex-none bg-ai-deep px-5 pt-3 text-white">
       <div className="flex items-center gap-2.5 pb-2.5">
@@ -21,6 +22,13 @@ export default function NorenHeader({ orgName, muted, onToggleMute }: Props) {
           className="flex h-11 w-11 flex-none items-center justify-center rounded-full text-xl"
         >
           {muted ? '🔇' : '🔊'}
+        </button>
+        <button
+          onClick={onLogout}
+          aria-label="ログアウト"
+          className="flex h-11 min-w-11 flex-none items-center justify-center rounded-full px-2 text-sm"
+        >
+          ログアウト
         </button>
       </div>
     </header>

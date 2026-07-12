@@ -202,6 +202,11 @@ export default function Home() {
     }
   }
 
+  const logout = async () => {
+    await supabase.auth.signOut()
+    router.replace('/login')
+  }
+
   if (!user || !orgId) return null
 
   const activeBantou = selectedBantou ? getBantou(selectedBantou) : null
@@ -212,7 +217,7 @@ export default function Home() {
 
   return (
     <main className="flex h-screen flex-col overflow-hidden">
-      <NorenHeader orgName={orgName} muted={muted} onToggleMute={toggleMute} />
+      <NorenHeader orgName={orgName} muted={muted} onToggleMute={toggleMute} onLogout={logout} />
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         <ChatPane
           messages={messages}

@@ -79,7 +79,10 @@ export default function ChatPane({
           type="text"
           value={inputValue}
           onChange={(e) => onInputChange(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') onSend() }}
+          onKeyDown={(e) => {
+            // IME変換確定のEnterでは送信しない（isComposing/keyCode 229は変換中を示す）
+            if (e.key === 'Enter' && !e.nativeEvent.isComposing && e.keyCode !== 229) onSend()
+          }}
           disabled={!inputEnabled}
           placeholder={placeholder}
           aria-label="番頭さんへの伝言"

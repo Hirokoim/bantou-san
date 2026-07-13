@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { play } from '@/lib/sound'
 
 export default function DueDatePicker({ noticeId }: { noticeId: string }) {
   const supabase = createClient()
@@ -11,6 +12,7 @@ export default function DueDatePicker({ noticeId }: { noticeId: string }) {
   const save = async () => {
     if (!date) return
     await supabase.from('notices').update({ due_date: date }).eq('id', noticeId)
+    play('koyo', 'done')
     setSaved(true)
   }
 

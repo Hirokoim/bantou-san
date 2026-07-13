@@ -268,6 +268,25 @@ AIという言葉をUIに出さないため、Gemini APIはバックエンドに
 
 ---
 
+## 11. ドキュメント構成
+
+このプロジェクトの文書（Markdown/HTML）がどう役割分担し、依存し合っているかを示す。コードのディレクトリ構成（`app/`・`lib/`の役割分担）は`CLAUDE.md`の「ディレクトリ構成」節を参照。
+
+| ファイル | 役割 | 依存関係・正本の向き |
+|---|---|---|
+| `CLAUDE.md` | Claude Codeが作業のたびに自動で読み込むプロジェクトルール | 本文中で`@AGENTS.md`を読み込む |
+| `AGENTS.md` | Next.jsのバージョン固有の注意書き（破壊的変更への警告） | `CLAUDE.md`から読み込まれる。単独では参照しない |
+| `README.md`（本書） | プロダクトの要件定義書。プロダクト概要〜用語定義までの正本 | 「4. システム機能要件」の番頭さんキャラクター一覧は`lib/bantou.ts`の実装内容と対応させる |
+| `docs/bantou-voice-script.md` | 番頭さんの音声セリフ台本（収録用） | セリフ文言は`lib/bantou.ts`と一致させる（正本はこちら）。ファイル名規則がそのまま`public/sounds/*.wav`の実ファイル名になる |
+| `docs/bantou-image-prompts.md` | 番頭さん6人のイラスト生成プロンプト集 | 生成結果が`public/images/bantou-*.png`として配置され、`lib/bantou.ts`の`image`フィールドから参照される |
+| `docs/bantou-ui-implementation-spec.md` | チャット×番頭さん選択UIの実装指示書 | `docs/bantou-select-design.html`を見本として参照。実装結果は`app/page.tsx`・`app/_components/`一式 |
+| `docs/bantou-select-design.html` | UIデザインの実物見本（静的HTML/CSS） | 上記の実装指示書から「迷ったらこれを正とする」と参照される |
+| `docs/code-review-2026-07-13.md` | 2026年7月13日時点のコード評価記録 | 他の文書からは参照されない独立したスナップショット。CI・CLAUDE.md整備・README更新の経緯を残すためのもの |
+
+**読み方の原則**：`docs/bantou-*`はキャラクターの設定・声・見た目・UIという「作る前に決めたこと」の正本で、実装（`lib/bantou.ts`・`app/`）はここと矛盾しないように保つ。`CLAUDE.md`はその原則をClaude Codeに徹底させるための入り口。評価記録（`code-review-*.md`）だけは性質が違い、特定時点の記録であって今後の実装が従うべきルールではない。
+
+---
+
 最終更新日：2026年7月14日（実装内容との整合性を確認し、技術スタック・進捗チェックリスト・画面構成・番頭さんキャラクター一覧を実態に合わせて更新）
 
 本要件定義書はVibe Codingでの開発を前提に随時アップデートします。

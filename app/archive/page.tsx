@@ -1,16 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import NoticeDetailPanel from '../_components/NoticeDetailPanel'
 
 type NoticeSummary = { id: string; title: string; created_at: string }
 
-export default function ArchivePage() {
+function ArchiveContent() {
   const supabase = createClient()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const requestedId = searchParams.get('id')
   const [notices, setNotices] = useState<NoticeSummary[] | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
 
@@ -29,7 +31,8 @@ export default function ArchivePage() {
         .order('created_at', { ascending: false })
       const list = data ?? []
       setNotices(list)
-      if (list.length > 0) setSelectedId(list[0].id)
+      const wanted = requestedId && list.some((n) => n.id === requestedId) ? requestedId : list[0]?.id
+      if (wanted) setSelectedId(wanted)
     }
     load()
   }, [])
@@ -82,5 +85,13 @@ export default function ArchivePage() {
         </Link>
       </div>
     </main>
+  )
+}
+
+export default function ArchivePage() {
+  return (
+    <Suspense fallback={null}>
+      <ArchiveContent />
+    </Suspense>
   )
 }

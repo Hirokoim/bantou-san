@@ -47,11 +47,16 @@ export default function PastNoticesList({ orgId }: { orgId: string }) {
     <div className="max-w-[92%] space-y-3">
       <ul className="space-y-2 rounded-xl border border-line bg-card p-4">
         {recent.map((n) => (
-          <li key={n.id} className="flex items-baseline justify-between gap-3 border-b border-line pb-2 last:border-0 last:pb-0">
-            <span className="text-lg">{n.title}</span>
-            <span className="flex-none text-base text-[#5C544A]">
-              {new Date(n.created_at).toLocaleDateString('ja-JP')}
-            </span>
+          <li key={n.id} className="border-b border-line pb-2 last:border-0 last:pb-0">
+            <Link
+              href={`/archive?id=${n.id}`}
+              className="flex min-h-[44px] items-baseline justify-between gap-3 rounded-lg px-1 hover:bg-washi"
+            >
+              <span className="text-lg underline">{n.title}</span>
+              <span className="flex-none text-base text-[#5C544A]">
+                {new Date(n.created_at).toLocaleDateString('ja-JP')}
+              </span>
+            </Link>
           </li>
         ))}
       </ul>

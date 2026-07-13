@@ -1,4 +1,4 @@
-// public/sounds/{bantouId}_{scene}.mp3 を再生する。ファイルが無くてもUIは止めない。
+// public/sounds/{bantouId}_{scene}.wav を再生する。ファイルが無くてもUIは止めない。
 type Scene = 'select' | 'done' | 'welcome' | 'handoff'
 
 const MUTE_KEY = 'bantou-muted'
@@ -17,7 +17,7 @@ export function setMuted(muted: boolean) {
 function getAudio(key: string): HTMLAudioElement {
   let audio = audioCache.get(key)
   if (!audio) {
-    audio = new Audio(`/sounds/${key}.mp3`)
+    audio = new Audio(`/sounds/${key}.wav`)
     audio.volume = 0.8
     audioCache.set(key, audio)
   }

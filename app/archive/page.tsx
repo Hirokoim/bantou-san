@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import NoticeDetailPanel from '../_components/NoticeDetailPanel'
 
 type NoticeSummary = { id: string; title: string; created_at: string }
 
@@ -11,6 +12,7 @@ export default function ArchivePage() {
   const supabase = createClient()
   const router = useRouter()
   const [notices, setNotices] = useState<NoticeSummary[] | null>(null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
 
   useEffect(() => {
     const load = async () => {
@@ -25,14 +27,16 @@ export default function ArchivePage() {
         .select('id, title, created_at')
         .eq('organization_id', orgId)
         .order('created_at', { ascending: false })
-      setNotices(data ?? [])
+      const list = data ?? []
+      setNotices(list)
+      if (list.length > 0) setSelectedId(list[0].id)
     }
     load()
   }, [])
 
   return (
     <main className="min-h-screen bg-washi p-6">
-      <div className="mx-auto max-w-2xl space-y-6">
+      <div className="mx-auto max-w-5xl space-y-6">
         <div className="flex items-center gap-3">
           <div className="flex h-11 w-11 flex-none items-center justify-center rounded-full border-2 border-ink font-display text-lg font-extrabold text-ink">
             蔵
@@ -48,16 +52,29 @@ export default function ArchivePage() {
         ) : notices.length === 0 ? (
           <p className="rounded-xl border border-line bg-card p-4 text-lg">まだお知らせがありません。</p>
         ) : (
-          <ul className="space-y-2 rounded-xl border border-line bg-card p-4">
-            {notices.map((n) => (
-              <li key={n.id} className="flex items-baseline justify-between gap-3 border-b border-line pb-2 last:border-0 last:pb-0">
-                <span className="text-lg">{n.title}</span>
-                <span className="flex-none text-base text-[#5C544A]">
-                  {new Date(n.created_at).toLocaleDateString('ja-JP')}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <div className="flex flex-col gap-4 md:flex-row">
+            <ul className="space-y-1 rounded-xl border border-line bg-card p-2 md:w-[40%] md:flex-none">
+              {notices.map((n) => (
+                <li key={n.id}>
+                  <button
+                    onClick={() => setSelectedId(n.id)}
+                    className={`flex min-h-[52px] w-full items-baseline justify-between gap-3 rounded-lg px-3 py-2 text-left ${
+                      selectedId === n.id ? 'bg-ai text-white' : 'text-ink'
+                    }`}
+                  >
+                    <span className="text-lg">{n.title}</span>
+                    <span className={`flex-none text-base ${selectedId === n.id ? 'text-white/80' : 'text-[#5C544A]'}`}>
+                      {new Date(n.created_at).toLocaleDateString('ja-JP')}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <div className="md:flex-1">
+              {selectedId && <NoticeDetailPanel key={selectedId} noticeId={selectedId} />}
+            </div>
+          </div>
         )}
 
         <Link href="/" className="inline-block min-h-[44px] py-2 text-lg font-bold text-ai underline">

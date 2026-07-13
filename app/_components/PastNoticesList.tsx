@@ -1,13 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 type NoticeSummary = { id: string; title: string; created_at: string }
 
+const RECENT_DAYS = 7
+
+type Filtered = { recent: NoticeSummary[]; hasOlder: boolean }
+
 export default function PastNoticesList({ orgId }: { orgId: string }) {
   const supabase = createClient()
-  const [notices, setNotices] = useState<NoticeSummary[] | null>(null)
+  const [filtered, setFiltered] = useState<Filtered | null>(null)
+  const [isEmpty, setIsEmpty] = useState(false)
 
   useEffect(() => {
     const load = async () => {
@@ -15,14 +21,19 @@ export default function PastNoticesList({ orgId }: { orgId: string }) {
         .select('id, title, created_at')
         .eq('organization_id', orgId)
         .order('created_at', { ascending: false })
-      setNotices(data ?? [])
+      const notices = data ?? []
+      if (notices.length === 0) { setIsEmpty(true); return }
+
+      const cutoff = Date.now() - RECENT_DAYS * 24 * 60 * 60 * 1000
+      const recent = notices.filter((n) => new Date(n.created_at).getTime() >= cutoff)
+      setFiltered({ recent, hasOlder: recent.length < notices.length })
     }
     load()
   }, [orgId])
 
-  if (notices === null) return null
+  if (!isEmpty && filtered === null) return null
 
-  if (notices.length === 0) {
+  if (isEmpty) {
     return (
       <div className="max-w-[92%] rounded-xl border border-line bg-card p-4 text-lg">
         まだお知らせがありません。
@@ -30,16 +41,29 @@ export default function PastNoticesList({ orgId }: { orgId: string }) {
     )
   }
 
+  const { recent, hasOlder } = filtered!
+
   return (
-    <ul className="max-w-[92%] space-y-2 rounded-xl border border-line bg-card p-4">
-      {notices.map((n) => (
-        <li key={n.id} className="flex items-baseline justify-between gap-3 border-b border-line pb-2 last:border-0 last:pb-0">
-          <span className="text-lg">{n.title}</span>
-          <span className="flex-none text-base text-[#5C544A]">
-            {new Date(n.created_at).toLocaleDateString('ja-JP')}
-          </span>
-        </li>
-      ))}
-    </ul>
+    <div className="max-w-[92%] space-y-3">
+      <ul className="space-y-2 rounded-xl border border-line bg-card p-4">
+        {recent.map((n) => (
+          <li key={n.id} className="flex items-baseline justify-between gap-3 border-b border-line pb-2 last:border-0 last:pb-0">
+            <span className="text-lg">{n.title}</span>
+            <span className="flex-none text-base text-[#5C544A]">
+              {new Date(n.created_at).toLocaleDateString('ja-JP')}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      {hasOlder && (
+        <div className="rounded-xl border border-line bg-card p-4 text-lg">
+          それより前に作成したお知らせは、こちらの蔵からご覧ください。
+          <Link href="/archive" className="ml-1 font-bold text-ai underline">
+            蔵を見る
+          </Link>
+        </div>
+      )}
+    </div>
   )
 }

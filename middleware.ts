@@ -1,7 +1,22 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const GATE_COOKIE = 'demo_access'
+
 export async function middleware(request: NextRequest) {
+  // 合言葉ゲート（DEMO_PASSWORD未設定時は無効。/gate・/api/gate自体は対象外）
+  const { pathname } = request.nextUrl
+  const isGateRoute = pathname === '/gate' || pathname.startsWith('/api/gate')
+  if (!isGateRoute && process.env.DEMO_PASSWORD) {
+    const cookie = request.cookies.get(GATE_COOKIE)?.value
+    if (cookie !== process.env.DEMO_PASSWORD) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/gate'
+      url.searchParams.set('next', pathname)
+      return NextResponse.redirect(url)
+    }
+  }
+
   let response = NextResponse.next({ request })
 
   const supabase = createServerClient(
